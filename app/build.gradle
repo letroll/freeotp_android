@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+
+dependencies {
+    compile 'com.google.zxing:core:3.1.0'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.squareup.picasso:picasso:2.4.0'
+    compile 'com.google.android.gms:play-services-wearable:7.3.0'
+    compile 'pl.tajchert:buswear:0.9.5'
+    wearApp project(':freeotp_wear')
+    compile project(':libcommon')
+}
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+    }
+
+    signingConfigs {
+        release
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+    def Properties props = new Properties()
+    def homePath = System.properties['user.home']
+    def propFile = new File(homePath, '.gradle/gradle.properties')
+    if (propFile.canRead()) {
+        props.load(new FileInputStream(propFile))
+        if (props != null && props.containsKey('STORE_FILE') &&
+                props.containsKey('STORE_PASSWORD') &&
+                props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
+            android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+            android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
+            android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
+            android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
+        } else {
+            println 'signing.properties found but some entries are missing'
+            android.buildTypes.release.signingConfig = null
+        }
+    } else {
+        println 'signing.properties not found'
+        android.buildTypes.release.signingConfig = null
+    }
+}
