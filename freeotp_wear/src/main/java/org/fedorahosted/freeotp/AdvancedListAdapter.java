@@ -6,10 +6,9 @@ import android.support.wearable.view.WearableListView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.fedorahosted.libcommon.ListItem;
-
-import pl.tajchert.buswear.EventBus;
 
 /**
  * Created by letroll on 24/05/15.
@@ -30,7 +29,6 @@ public class AdvancedListAdapter extends WearableListView.Adapter {
         return new WearableListView.ViewHolder(new MyItemView(context));
     }
 
-
     @Override
     public void onBindViewHolder(WearableListView.ViewHolder viewHolder, int i) {
         MyItemView itemView = (MyItemView) viewHolder.itemView;
@@ -50,7 +48,8 @@ public class AdvancedListAdapter extends WearableListView.Adapter {
         txtView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventBus.getDefault().postRemote(GET_TOKEN_LIST, context);
+//                EventBus.getDefault().postRemote(GET_TOKEN_LIST, context);
+                Toast.makeText(context,"toto",Toast.LENGTH_SHORT).show();
             }
         });
     }

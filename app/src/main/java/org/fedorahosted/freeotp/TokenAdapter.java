@@ -49,8 +49,10 @@ public class TokenAdapter extends BaseReorderableAdapter {
     private final LayoutInflater         mLayoutInflater;
     private final ClipboardManager       mClipMan;
     private final Map<String, TokenCode> mTokenCodes;
+    private final Context ctx;
 
     public TokenAdapter(Context ctx) {
+        this.ctx=ctx;
         mTokenPersistence = new TokenPersistence(ctx);
         mLayoutInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mClipMan = (ClipboardManager) ctx.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -121,9 +123,7 @@ public class TokenAdapter extends BaseReorderableAdapter {
         tl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                EventBus.getDefault().postRemote("back",ctx);
-                EventBus.getDefault().postRemote(getItems(), ctx);
+                shareItems();
 
                 TokenPersistence tp = new TokenPersistence(ctx);
 
@@ -165,4 +165,7 @@ public class TokenAdapter extends BaseReorderableAdapter {
         return itemsName;
     }
 
+    public void shareItems() {
+        EventBus.getDefault().postRemote(getItems(), ctx);
+    }
 }

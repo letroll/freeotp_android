@@ -92,12 +92,8 @@ public class MainActivity extends Activity implements Constant,OnMenuItemClickLi
     }
 
     public void onEvent(String text){
-        log("onEvent:" + text);
-//        switch (text){
-//            case GET_TOKEN_LIST:
-                EventBus.getDefault().postRemote(mTokenAdapter.getItems(), this);
-//                break;
-//        }
+        if(text.equals(GET_TOKEN_LIST))mTokenAdapter.shareItems();
+        log("onEvent:" + text +" "+text.equals(GET_TOKEN_LIST));
     }
 
     @Override

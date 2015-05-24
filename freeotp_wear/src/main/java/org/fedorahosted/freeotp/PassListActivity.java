@@ -69,6 +69,10 @@ public class PassListActivity extends Activity implements Constant,WearableListV
 
     }
 
+    public void onEvent(String text){
+        toast(text);
+    }
+
     public void onEvent(ListItem itemsName){
         listItems=itemsName;
         runOnUiThread(new Runnable() {

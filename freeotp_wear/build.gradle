@@ -55,6 +55,9 @@ dependencies {
     compile 'com.google.android.gms:play-services-wearable:7.3.0'
     compile 'com.takwolf.android:lock9view:0.0.3'
     compile 'pl.tajchert:buswear:0.9.5'
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.jakewharton:disklrucache:2.0.2'
     compile ('com.github.florent37:davinci:1.0.2@aar')
     compile project(':libcommon')
 }

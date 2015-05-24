@@ -87,7 +87,9 @@
     <orderEntry type="library" exported="" name="recyclerview-v7-21.0.0" level="project" />
     <orderEntry type="library" exported="" name="buswear-0.9.5" level="project" />
     <orderEntry type="library" exported="" name="lock9view-0.0.3" level="project" />
+    <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.1.1" level="project" />
+    <orderEntry type="library" exported="" name="disklrucache-2.0.2" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.1.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-base-7.3.0" level="project" />
     <orderEntry type="module" module-name="libcommon" exported="" />
