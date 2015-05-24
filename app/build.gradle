@@ -8,6 +8,9 @@ dependencies {
     compile 'pl.tajchert:buswear:0.9.5'
     wearApp project(':freeotp_wear')
     compile project(':libcommon')
+
+    compile ('com.github.florent37:davincidaemon:1.0.2@aar')
+
 }
 
 android {
@@ -34,13 +37,13 @@ android {
 
     def Properties props = new Properties()
     def homePath = System.properties['user.home']
-    def propFile = new File(homePath, '.gradle/gradle.properties')
+    def propFile = new File(homePath+'/Dropbox/android/', 'keystore_perso_2.properties')
+
     if (propFile.canRead()) {
         props.load(new FileInputStream(propFile))
-        if (props != null && props.containsKey('STORE_FILE') &&
-                props.containsKey('STORE_PASSWORD') &&
+        if (props != null && props.containsKey('STORE_PASSWORD') &&
                 props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
-            android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+            android.signingConfigs.release.storeFile = file(homePath+'/Dropbox/android/keystore_perso_2')
             android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
             android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
             android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']

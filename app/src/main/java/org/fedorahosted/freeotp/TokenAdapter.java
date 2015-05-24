@@ -34,11 +34,15 @@ import android.widget.Toast;
 
 import org.fedorahosted.freeotp.edit.DeleteActivity;
 import org.fedorahosted.freeotp.edit.EditActivity;
+import org.fedorahosted.libcommon.Item;
+import org.fedorahosted.libcommon.ListItem;
 import org.fedorahosted.libcommon.Token;
 import org.fedorahosted.libcommon.TokenCode;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import pl.tajchert.buswear.EventBus;
 
 public class TokenAdapter extends BaseReorderableAdapter {
     private final TokenPersistence       mTokenPersistence;
@@ -117,6 +121,10 @@ public class TokenAdapter extends BaseReorderableAdapter {
         tl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                EventBus.getDefault().postRemote("back",ctx);
+                EventBus.getDefault().postRemote(getItems(), ctx);
+
                 TokenPersistence tp = new TokenPersistence(ctx);
 
                 // Increment the token.
@@ -144,4 +152,17 @@ public class TokenAdapter extends BaseReorderableAdapter {
     protected View createView(ViewGroup parent, int type) {
         return mLayoutInflater.inflate(R.layout.token, parent, false);
     }
+
+    public ListItem getItems() {
+        ListItem itemsName=new ListItem();
+        int len = getCount();
+        String id,uri;
+        for(int i=0;i<len;i++) {
+            id=mTokenPersistence.get(i).getID();
+            uri=mTokenPersistence.get(i).getImage()==null?null:mTokenPersistence.get(i).getImage().toString();
+            itemsName.add(new Item(uri,id));
+        }
+        return itemsName;
+    }
+
 }

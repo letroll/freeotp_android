@@ -36,14 +36,12 @@
 
 package org.fedorahosted.freeotp;
 
-import org.fedorahosted.freeotp.add.AddActivity;
-import org.fedorahosted.freeotp.add.ScanActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
@@ -51,7 +49,14 @@ import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.widget.GridView;
 
-public class MainActivity extends Activity implements OnMenuItemClickListener {
+import org.fedorahosted.freeotp.add.AddActivity;
+import org.fedorahosted.freeotp.add.ScanActivity;
+import org.fedorahosted.libcommon.Constant;
+
+import pl.tajchert.buswear.EventBus;
+
+public class MainActivity extends Activity implements Constant,OnMenuItemClickListener {
+    private final String tag=this.getClass().getSimpleName();
     private TokenAdapter mTokenAdapter;
     private DataSetObserver mDataSetObserver;
 
@@ -78,6 +83,21 @@ public class MainActivity extends Activity implements OnMenuItemClickListener {
             }
         };
         mTokenAdapter.registerDataSetObserver(mDataSetObserver);
+
+        EventBus.getDefault().register(this);
+    }
+
+    private void log(String txt){
+        Log.e(tag,txt);
+    }
+
+    public void onEvent(String text){
+        log("onEvent:" + text);
+//        switch (text){
+//            case GET_TOKEN_LIST:
+                EventBus.getDefault().postRemote(mTokenAdapter.getItems(), this);
+//                break;
+//        }
     }
 
     @Override
