@@ -42,8 +42,6 @@ import org.fedorahosted.libcommon.TokenCode;
 import java.util.HashMap;
 import java.util.Map;
 
-import pl.tajchert.buswear.EventBus;
-
 public class TokenAdapter extends BaseReorderableAdapter {
     private final TokenPersistence       mTokenPersistence;
     private final LayoutInflater         mLayoutInflater;
@@ -123,22 +121,14 @@ public class TokenAdapter extends BaseReorderableAdapter {
         tl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shareItems();
-
                 TokenPersistence tp = new TokenPersistence(ctx);
-
-                // Increment the token.
                 Token token = tp.get(position);
                 TokenCode codes = token.generateCodes();
                 tp.save(token);
-
-                // Copy code to clipboard.
-                mClipMan.setPrimaryClip(ClipData.newPlainText(null, codes.getCurrentCode()));
-                Toast.makeText(v.getContext().getApplicationContext(),
-                        R.string.code_copied,
-                        Toast.LENGTH_SHORT).show();
-
                 mTokenCodes.put(token.getID(), codes);
+
+                copyCodeToClipboard(codes, ctx);
+
                 ((TokenLayout) v).start(token.getType(), codes, true);
             }
         });
@@ -146,6 +136,20 @@ public class TokenAdapter extends BaseReorderableAdapter {
         TokenCode tc = mTokenCodes.get(token.getID());
         if (tc != null && tc.getCurrentCode() != null)
             tl.start(token.getType(), tc, false);
+    }
+
+    private void copyCodeToClipboard(TokenCode codes, Context ctx) {
+        mClipMan.setPrimaryClip(ClipData.newPlainText(null, codes.getCurrentCode()));
+        Toast.makeText(ctx, R.string.code_copied, Toast.LENGTH_SHORT).show();
+    }
+
+    public String getCodeOnWear(int position){
+        TokenPersistence tp = new TokenPersistence(ctx);
+        Token token = tp.get(position);
+        TokenCode codes = token.generateCodes();
+        tp.save(token);
+        mTokenCodes.put(token.getID(), codes);
+        return codes.getCurrentCode();
     }
 
     @Override
@@ -163,9 +167,5 @@ public class TokenAdapter extends BaseReorderableAdapter {
             itemsName.add(new Item(uri,id));
         }
         return itemsName;
-    }
-
-    public void shareItems() {
-        EventBus.getDefault().postRemote(getItems(), ctx);
     }
 }

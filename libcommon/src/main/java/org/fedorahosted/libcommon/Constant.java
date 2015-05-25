@@ -5,4 +5,5 @@ package org.fedorahosted.libcommon;
  */
 public interface Constant {
     String GET_TOKEN_LIST="getTokenList";
+    String GET_TOKEN_CODE="getTokenCode";
 }

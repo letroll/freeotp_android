@@ -1,4 +1,4 @@
-package org.fedorahosted.freeotp;
+package org.fedorahosted.freeotp_wear;
 
 import android.content.Context;
 import android.support.wearable.view.CircledImageView;
@@ -6,6 +6,8 @@ import android.support.wearable.view.WearableListView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import org.fedorahosted.freeotp.R;
 
 /**
  * Created by letroll on 24/05/15.

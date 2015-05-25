@@ -1,10 +1,12 @@
-package org.fedorahosted.freeotp;
+package org.fedorahosted.freeotp_wear;
 
 import android.content.Context;
 import android.support.wearable.view.WearableListView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import org.fedorahosted.freeotp.R;
 
 import java.util.ArrayList;
 

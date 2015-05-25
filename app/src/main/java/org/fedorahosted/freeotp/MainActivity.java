@@ -48,17 +48,23 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.widget.GridView;
+import android.widget.Toast;
+
+import com.google.android.gms.wearable.DataMap;
+import com.mariux.teleport.lib.TeleportClient;
 
 import org.fedorahosted.freeotp.add.AddActivity;
 import org.fedorahosted.freeotp.add.ScanActivity;
 import org.fedorahosted.libcommon.Constant;
 
-import pl.tajchert.buswear.EventBus;
+import de.greenrobot.event.EventBus;
 
 public class MainActivity extends Activity implements Constant,OnMenuItemClickListener {
     private final String tag=this.getClass().getSimpleName();
     private TokenAdapter mTokenAdapter;
     private DataSetObserver mDataSetObserver;
+
+    private TeleportClient mTeleportClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,16 +90,53 @@ public class MainActivity extends Activity implements Constant,OnMenuItemClickLi
         };
         mTokenAdapter.registerDataSetObserver(mDataSetObserver);
 
+        mTeleportClient = new TeleportClient(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mTeleportClient.connect();
         EventBus.getDefault().register(this);
     }
 
-    private void log(String txt){
-        Log.e(tag,txt);
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mTeleportClient.disconnect();
+        EventBus.getDefault().unregister(this);
     }
 
-    public void onEvent(String text){
-        if(text.equals(GET_TOKEN_LIST))mTokenAdapter.shareItems();
-        log("onEvent:" + text +" "+text.equals(GET_TOKEN_LIST));
+
+    private void log(String txt){
+        Log.e(tag, txt);
+    }
+
+
+    //For DataItem API changes
+    public void onEvent(DataMap dataMap) {
+        final String s = dataMap.getString("string");
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), "DataItem - " + s, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    //For Message API receiving
+    public void onEvent(final String text) {
+        log("onEvent:"+text);
+        if(text.equals(GET_TOKEN_LIST))
+            mTeleportClient.syncObject("byte",mTokenAdapter.getItems());
+
+        if(text.startsWith(GET_TOKEN_CODE)){
+            int pos=Integer.parseInt(text.substring(GET_TOKEN_CODE.length()));
+            mTeleportClient.sendMessage(mTokenAdapter.getCodeOnWear(pos),null);
+            finish();
+        }
+
     }
 
     @Override

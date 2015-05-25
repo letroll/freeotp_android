@@ -1,4 +1,4 @@
-package org.fedorahosted.freeotp;
+package org.fedorahosted.freeotp_wear;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,6 +7,8 @@ import android.support.wearable.view.WatchViewStub;
 import android.widget.Toast;
 
 import com.takwolf.android.lock9.Lock9View;
+
+import org.fedorahosted.freeotp.R;
 
 public class MainActivity extends Activity {
 

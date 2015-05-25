@@ -1,4 +1,4 @@
-package org.fedorahosted.freeotp;
+package org.fedorahosted.freeotp_wear;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,16 +9,23 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.wearable.DataMap;
+import com.mariux.teleport.lib.TeleportClient;
+
+import org.fedorahosted.freeotp.R;
 import org.fedorahosted.libcommon.Constant;
 import org.fedorahosted.libcommon.ListItem;
 
-import pl.tajchert.buswear.EventBus;
+import de.greenrobot.event.EventBus;
 
 public class PassListActivity extends Activity implements Constant,WearableListView.ClickListener {
     private final String tag=this.getClass().getSimpleName();
     private ListItem listItems;
     private WearableListView mListView;
     private ProgressBar mProgress;
+
+    private TeleportClient mTeleportClient;
+    private AdvancedListAdapter advAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,21 +41,52 @@ public class PassListActivity extends Activity implements Constant,WearableListV
             }
         });
 
-        EventBus.getDefault().postRemote(GET_TOKEN_LIST, PassListActivity.this);
+        log("onCreate");
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
+        log("onStart");
+        mTeleportClient = new TeleportClient(this);
+        mTeleportClient.connect();
+        mTeleportClient.sendMessage("startActivity", null);
+        mTeleportClient.sendMessage(GET_TOKEN_LIST, null);
         EventBus.getDefault().register(this);
     }
 
-
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
+        mTeleportClient.disconnect();
         EventBus.getDefault().unregister(this);
     }
+
+    //For DataItem API changes
+    public void onEvent(DataMap dataMap) {
+        listItems=new ListItem(TeleportClient.byteToParcel(dataMap.getByteArray("byte")));
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mProgress.setVisibility(View.GONE);
+                advAdapter=new AdvancedListAdapter(PassListActivity.this, listItems);
+                mListView.setAdapter(advAdapter);
+                mListView.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    //For Message API receiving
+    public void onEvent(final String path) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                toast(path);
+                advAdapter.updateViewWithCode(path);
+            }
+        });
+    }
+
 
     private void log(String txt){
         Log.e(tag, txt);
@@ -69,19 +107,7 @@ public class PassListActivity extends Activity implements Constant,WearableListV
 
     }
 
-    public void onEvent(String text){
-        toast(text);
-    }
-
-    public void onEvent(ListItem itemsName){
-        listItems=itemsName;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mProgress.setVisibility(View.GONE);
-                mListView.setAdapter(new AdvancedListAdapter(PassListActivity.this, listItems));
-                mListView.setVisibility(View.VISIBLE);
-            }
-        });
+    public void getTokenForPosition(int i) {
+        mTeleportClient.sendMessage(GET_TOKEN_CODE+i, null);
     }
 }

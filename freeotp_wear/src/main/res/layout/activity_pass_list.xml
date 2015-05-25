@@ -6,5 +6,5 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     app:rectLayout="@layout/rect_activity_pass_list"
     app:roundLayout="@layout/round_activity_pass_list"
-    tools:context="org.fedorahosted.freeotp.PassListActivity"
+    tools:context="org.fedorahosted.freeotp_wear.PassListActivity"
     tools:deviceIds="wear"></android.support.wearable.view.WatchViewStub>

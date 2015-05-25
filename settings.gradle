@@ -1,1 +1,4 @@
 include ':app', ':freeotp_wear', ':libcommon'
+
+include ':teleport_wear'
+project(':teleport_wear').projectDir=new File('/Users/letroll/AndroidStudioProjects/teleport_wear/teleportlib')

@@ -19,4 +19,6 @@ ext {
     buildToolsVersion = '22.0.1'
     minSdkVersion = 20
     targetSdkVersion = 22
+    minifyEnabled = false
+    debuggable = false
 }

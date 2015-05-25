@@ -3,16 +3,13 @@ apply plugin: 'com.android.application'
 dependencies {
     compile 'com.google.zxing:core:3.1.0'
     compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.squareup.picasso:picasso:2.4.0'
-    compile 'com.google.android.gms:play-services-wearable:7.3.0'
-    compile 'pl.tajchert:buswear:0.9.5'
-    wearApp project(':freeotp_wear')
-    compile project(':libcommon')
-
+    compile 'com.google.android.gms:play-services-wearable:+'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.jakewharton:disklrucache:2.0.2'
-    compile ('com.github.florent37:davincidaemon:1.0.2@aar')
-
+    compile 'com.github.florent37:davincidaemon:1.0.2@aar'
+    compile project(':libcommon')
+    wearApp project(':freeotp_wear')
+    compile project(':teleport_wear')
 }
 
 android {
