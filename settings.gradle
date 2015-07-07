@@ -1,4 +1,4 @@
 include ':app', ':freeotp_wear', ':libcommon'
 
-include ':teleport_wear'
-project(':teleport_wear').projectDir=new File('../teleport_wear/teleportlib')
+//include ':teleport_wear'
+//project(':teleport_wear').projectDir=new File('../teleport_wear/teleportlib')

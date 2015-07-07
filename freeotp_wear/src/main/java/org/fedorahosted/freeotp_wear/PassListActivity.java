@@ -5,26 +5,23 @@ import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.view.WearableListView;
 import android.util.Log;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.wearable.DataMap;
-import com.mariux.teleport.lib.TeleportClient;
+import com.github.florent37.emmet.Emmet;
 
 import org.fedorahosted.freeotp.R;
 import org.fedorahosted.libcommon.Constant;
 import org.fedorahosted.libcommon.ListItem;
+import org.fedorahosted.libcommon.SmartphoneProtocol;
+import org.fedorahosted.libcommon.WearProtocol;
 
-import de.greenrobot.event.EventBus;
-
-public class PassListActivity extends Activity implements Constant,WearableListView.ClickListener {
+public class PassListActivity extends Activity implements Constant,WearableListView.ClickListener,WearProtocol {
     private final String tag=this.getClass().getSimpleName();
     private ListItem listItems;
     private WearableListView mListView;
     private ProgressBar mProgress;
 
-    private TeleportClient mTeleportClient;
     private AdvancedListAdapter advAdapter;
 
     @Override
@@ -42,50 +39,45 @@ public class PassListActivity extends Activity implements Constant,WearableListV
         });
 
         log("onCreate");
+
+        //initialise Emmet
+        Emmet.onCreate(this);
+
+        Emmet.registerReceiver(WearProtocol.class, this);
+        SmartphoneProtocol smartphoneProtocol = Emmet.createSender(SmartphoneProtocol.class);
+
+        smartphoneProtocol.hello(); //envoie le message hello smartphone
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        log("onStart");
-        mTeleportClient = new TeleportClient(this);
-        mTeleportClient.connect();
-        mTeleportClient.sendMessage("startActivity", null);
-        mTeleportClient.sendMessage(GET_TOKEN_LIST, null);
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mTeleportClient.disconnect();
-        EventBus.getDefault().unregister(this);
-    }
-
-    //For DataItem API changes
-    public void onEvent(DataMap dataMap) {
-        listItems=new ListItem(TeleportClient.byteToParcel(dataMap.getByteArray("byte")));
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mProgress.setVisibility(View.GONE);
-                advAdapter=new AdvancedListAdapter(PassListActivity.this, listItems);
-                mListView.setAdapter(advAdapter);
-                mListView.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-
-    //For Message API receiving
-    public void onEvent(final String path) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                toast(path);
-                advAdapter.updateViewWithCode(path);
-            }
-        });
-    }
+//        mTeleportClient.sendMessage(GET_TOKEN_LIST, null);
+//
+//
+//
+//
+//    //For DataItem API changes
+//    public void onEvent(DataMap dataMap) {
+//        listItems=new ListItem(TeleportClient.byteToParcel(dataMap.getByteArray("byte")));
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                mProgress.setVisibility(View.GONE);
+//                advAdapter=new AdvancedListAdapter(PassListActivity.this, listItems);
+//                mListView.setAdapter(advAdapter);
+//                mListView.setVisibility(View.VISIBLE);
+//            }
+//        });
+//    }
+//
+//    //For Message API receiving
+//    public void onEvent(final String path) {
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                toast(path);
+//                advAdapter.updateViewWithCode(path);
+//            }
+//        });
+//    }
 
 
     private void log(String txt){
@@ -107,7 +99,17 @@ public class PassListActivity extends Activity implements Constant,WearableListV
 
     }
 
-    public void getTokenForPosition(int i) {
-        mTeleportClient.sendMessage(GET_TOKEN_CODE+i, null);
+    @Override
+    public void onCodeReceived(String code) {
+
     }
+
+    @Override
+    public void onReceived(ListItem listItem) {
+
+    }
+
+//    public void getTokenForPosition(int i) {
+//        mTeleportClient.sendMessage(GET_TOKEN_CODE+i, null);
+//    }
 }

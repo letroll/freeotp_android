@@ -56,7 +56,9 @@ public class AdvancedListAdapter extends WearableListView.Adapter implements Con
         txtView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+/*
                 ((PassListActivity)context).getTokenForPosition(i);
+*/
                 txtViewForCode=txtView;
             }
         });

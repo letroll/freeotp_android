@@ -6,10 +6,12 @@ dependencies {
     compile 'com.google.android.gms:play-services-wearable:+'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.jakewharton:disklrucache:2.0.2'
-    compile 'com.github.florent37:davincidaemon:1.0.2@aar'
     compile project(':libcommon')
+    compile ("com.github.florent37:davincidaemon:1.0.3@aar"){
+        transitive=true
+        exclude group:"com.google.android.gms" //davinci & emmet use different gms versions
+    }
     wearApp project(':freeotp_wear')
-    compile project(':teleport_wear')
 }
 
 android {
