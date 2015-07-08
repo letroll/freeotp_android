@@ -6,4 +6,6 @@ package org.fedorahosted.libcommon;
  */
 public interface SmartphoneProtocol {
     void hello();
+
+    void getTokenForPosition(int i);
 }

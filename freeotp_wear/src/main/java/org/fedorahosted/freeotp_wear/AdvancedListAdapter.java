@@ -6,25 +6,22 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.wearable.view.CircledImageView;
 import android.support.wearable.view.WearableListView;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.florent37.davinci.DaVinci;
 
 import org.fedorahosted.freeotp.R;
-import org.fedorahosted.libcommon.Constant;
 import org.fedorahosted.libcommon.ListItem;
 
 /**
  * Created by letroll on 24/05/15.
  */
-public class AdvancedListAdapter extends WearableListView.Adapter implements Constant {
+public class AdvancedListAdapter extends WearableListView.Adapter {
 
 
     private final ListItem listItems;
     private Context context;
-    private TextView txtViewForCode;
 
     public AdvancedListAdapter(Context context,ListItem listItems){
         this.context=context;
@@ -52,16 +49,6 @@ public class AdvancedListAdapter extends WearableListView.Adapter implements Con
                 imgView.setImageDrawable(d);
             }
         });
-
-        txtView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-/*
-                ((PassListActivity)context).getTokenForPosition(i);
-*/
-                txtViewForCode=txtView;
-            }
-        });
     }
 
     @Override
@@ -69,7 +56,4 @@ public class AdvancedListAdapter extends WearableListView.Adapter implements Con
         return listItems.size();
     }
 
-    public void updateViewWithCode(String txt){
-        txtViewForCode.setText(txt);
-    }
 } 

@@ -34,8 +34,6 @@ import android.widget.Toast;
 
 import org.fedorahosted.freeotp.edit.DeleteActivity;
 import org.fedorahosted.freeotp.edit.EditActivity;
-import org.fedorahosted.libcommon.Item;
-import org.fedorahosted.libcommon.ListItem;
 import org.fedorahosted.libcommon.Token;
 import org.fedorahosted.libcommon.TokenCode;
 
@@ -92,8 +90,8 @@ public class TokenAdapter extends BaseReorderableAdapter {
     @Override
     protected void bindView(View view, final int position) {
         final Context ctx = view.getContext();
-        TokenLayout tl = (TokenLayout) view;
-        Token token = getItem(position);
+        final TokenLayout tl = (TokenLayout) view;
+        final Token token = getItem(position);
 
         tl.bind(token, R.menu.token, new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -112,6 +110,9 @@ public class TokenAdapter extends BaseReorderableAdapter {
                         i.putExtra(DeleteActivity.EXTRA_POSITION, position);
                         ctx.startActivity(i);
                         break;
+                    case R.id.action_copy:
+                        copyCodeToClipboard(tl.getTokenCode(), ctx);
+                        break;
                 }
 
                 return true;
@@ -127,7 +128,7 @@ public class TokenAdapter extends BaseReorderableAdapter {
                 tp.save(token);
                 mTokenCodes.put(token.getID(), codes);
 
-                copyCodeToClipboard(codes, ctx);
+                //copyCodeToClipboard(codes, ctx);
 
                 ((TokenLayout) v).start(token.getType(), codes, true);
             }
@@ -143,29 +144,8 @@ public class TokenAdapter extends BaseReorderableAdapter {
         Toast.makeText(ctx, R.string.code_copied, Toast.LENGTH_SHORT).show();
     }
 
-    public String getCodeOnWear(int position){
-        TokenPersistence tp = new TokenPersistence(ctx);
-        Token token = tp.get(position);
-        TokenCode codes = token.generateCodes();
-        tp.save(token);
-        mTokenCodes.put(token.getID(), codes);
-        return codes.getCurrentCode();
-    }
-
     @Override
     protected View createView(ViewGroup parent, int type) {
         return mLayoutInflater.inflate(R.layout.token, parent, false);
-    }
-
-    public ListItem getItems() {
-        ListItem itemsName=new ListItem();
-        int len = getCount();
-        String id,uri;
-        for(int i=0;i<len;i++) {
-            id=mTokenPersistence.get(i).getID();
-            uri=mTokenPersistence.get(i).getImage()==null?null:mTokenPersistence.get(i).getImage().toString();
-            itemsName.add(new Item(uri,id));
-        }
-        return itemsName;
     }
 }

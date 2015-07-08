@@ -53,10 +53,9 @@ import com.github.florent37.emmet.Emmet;
 
 import org.fedorahosted.freeotp.add.AddActivity;
 import org.fedorahosted.freeotp.add.ScanActivity;
-import org.fedorahosted.libcommon.Constant;
 import org.fedorahosted.libcommon.WearProtocol;
 
-public class MainActivity extends Activity implements Constant,OnMenuItemClickListener{
+public class MainActivity extends Activity implements OnMenuItemClickListener {
     private final String tag=this.getClass().getSimpleName();
     private TokenAdapter mTokenAdapter;
     private DataSetObserver mDataSetObserver;

@@ -159,4 +159,8 @@ public class TokenLayout extends FrameLayout implements View.OnClickListener, Ru
         mProgressOuter.setVisibility(View.GONE);
         animate(mImage, R.anim.token_image_fadein, true);
     }
+
+    public TokenCode getTokenCode() {
+        return mCodes;
+    }
 }
