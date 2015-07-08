@@ -3,35 +3,60 @@ package org.fedorahosted.freeotp;
 import android.content.Intent;
 import android.util.Log;
 
+import com.github.florent37.emmet.Emmet;
+import com.github.florent37.emmet.EmmetWearableListenerService;
 import com.google.android.gms.wearable.MessageEvent;
-import com.mariux.teleport.lib.TeleportService;
 
-import de.greenrobot.event.EventBus;
+import org.fedorahosted.libcommon.SmartphoneProtocol;
+import org.fedorahosted.libcommon.WearProtocol;
+
 
 /**
  * Created by letroll on 24/05/15.
  */
-public class MobileService extends TeleportService {
+public class MobileService  extends EmmetWearableListenerService implements SmartphoneProtocol {
     private static final String TAG = "MobileService";
+
+    private WearProtocol wearProtocol;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        //initialise la récéption de données
+        Emmet.registerReceiver(SmartphoneProtocol.class, this);
+
+        //initialise l'envoie de données vers la montre
+        wearProtocol = Emmet.createSender(WearProtocol.class);
     }
 
+    //lorsque le smartphone reçois le message hello (envoyé depuis wear)
+//    @Override
+//    public void hello() {
+//        //Utilise Retrofit pour réaliser un appel REST
+//        AndroidService androidService = new RestAdapter.Builder()
+//                .setEndpoint(AndroidService.ENDPOINT)
+//                .build().create(AndroidService.class);
+//
+//        //Récupère et deserialise le contenu de mon fichier JSON en objet List<AndroidVersion>
+//        androidService.getElements(new Callback<List<AndroidVersion>>() {
+//            @Override
+//            public void success(List<AndroidVersion> androidVersions, Response response) {
+//
+//                //envoie cette liste à la montre
+//                wearProtocol.onAndroidVersionsReceived(androidVersions);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//            }
+//        });
+//    }
 
-    //If we want to react to changes in background we need to implement onMessageReceived or onDataChanged plus post() for eventBus
     @Override
-    public void onMessageReceived(MessageEvent messageEvent) {
-        //Notify potential other subcribers as you just overtake over message receiving
-        EventBus.getDefault().post(messageEvent.getPath());
-
-        //Our custom part
-        Log.d(TAG, "onMessageReceived in Service : " + messageEvent);
-        if (messageEvent.getPath().equals("startActivity")) {
-            Intent startIntent = new Intent(getBaseContext(), MainActivity.class);
-            startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(startIntent);
-        }
+    public void hello() {
+        Intent startIntent = new Intent(getBaseContext(), MainActivity.class);
+        startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startIntent);
     }
 }
